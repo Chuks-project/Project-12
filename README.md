@@ -119,3 +119,62 @@ It is time to start adding some logic to the webserver role. Go into tasks direc
     state: absent`
 
 ```
+
+  
+
+## REFERENCE WEBSERVER ROLE
+  
+Step 4 – Reference ‘Webserver’ role
+Within the static-assignments folder, create a new assignment for uat-webservers uat-webservers.yml. This is where you will reference the role.
+  
+  
+```
+  ---
+- hosts: uat-webservers
+  roles:
+     - webserver
+
+  ```  
+  
+  
+- Remember that the entry point to our ansible configuration is the site.yml file. Therefore, you need to refer your uat-webservers.yml role inside site.yml.
+
+So, we should have this in site.yml
+  
+```  
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+
+- hosts: uat-webservers
+- import_playbook: ../static-assignments/uat-webservers.yml
+  
+```  
+
+  
+#### Step 5 – Commit & Test
+Commit your changes, create a Pull Request and merge them to master branch, make sure webhook triggered two consequent Jenkins jobs, they ran successfully and copied all the files to your Jenkins-Ansible server into /home/ubuntu/ansible-config-mgt/ directory.
+
+Now run the playbook against your uat inventory and see what happens:
+
+  
+`sudo ansible-playbook -i /home/ubuntu/ansible-config-mgt/inventory/uat.yml playbooks/site.yaml`
+  
+
+  
+  
+![ansible playbook successful png 1](https://user-images.githubusercontent.com/65022146/215481040-bdfbcfc5-f986-4e84-9f65-75e3313377af.png)
+  
+  
+  ![plabooks succc](https://user-images.githubusercontent.com/65022146/215481421-cf63f74d-77f7-47a8-8c08-909c689a0175.png)
+
+  
+- You should be able to see both of your UAT Web servers configured and you can try to reach them from your browser as seen below:
+
+  http://<Web1-UAT-Server-Public-IP-or-Public-DNS-Name>/index.php
+
+ 
+  ![uat webserver1 successful](https://user-images.githubusercontent.com/65022146/215482313-534bb3c6-1fb1-4d5f-865e-f87c4fba77f8.png)
+
+  
+  
